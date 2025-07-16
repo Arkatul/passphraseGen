@@ -2,6 +2,9 @@
 
 set -euo pipefail
 
+command -v curl >/dev/null 2>&1 || { echo "curl is required"; exit 1; }
+command -v jq   >/dev/null 2>&1 || { echo "jq is required"; exit 1; }
+
 # ===== CONFIGURABLE PARAMETERS =====
 NUM_WORDS=4
 NUM_SPECIALS=2
