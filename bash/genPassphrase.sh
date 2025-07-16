@@ -11,7 +11,7 @@ NUM_SPECIALS=2
 NUM_DIGITS=2
 ALLOWED_SPECIALS='!@#%&*'
 SEPARATORS='-_:.'
-CASE_PROFILE=4
+CASE_PROFILE=3
 
 usage() {
     cat <<EOF
@@ -24,6 +24,11 @@ Options:
   -a, --allowed-specials SET Allowed special characters (default: "$ALLOWED_SPECIALS")
   -e, --separators SET       Possible word separators (default: "$SEPARATORS")
   -c, --case-profile NUM     Case profile [1-5] (default: $CASE_PROFILE)
+                              1: all lowercase
+                              2: all uppercase
+                              3: random case per word
+                              4: one random letter uppercase per word
+                              5: random case per letter
   -h, --help                 Display this help and exit
 EOF
 }
@@ -147,11 +152,12 @@ SEP="${SEPARATORS:$SEP_INDEX:1}"
 JOINED_WORDS=$(IFS="$SEP"; echo "${WORD_ARRAY[*]}")
 
 # ===== BUILD PASSPHRASE =====
-SPECIALS=$(rand_chars "$ALLOWED_SPECIALS" "$NUM_SPECIALS")
+PREFIX_SPECIALS=$(rand_chars "$ALLOWED_SPECIALS" "$NUM_SPECIALS")
+SUFFIX_SPECIALS=$(echo "$PREFIX_SPECIALS" | rev)
 PREFIX_DIGITS=$(rand_chars "0123456789" "$NUM_DIGITS")
 SUFFIX_DIGITS=$(rand_chars "0123456789" "$NUM_DIGITS")
 
-PASSPHRASE="${SPECIALS}${PREFIX_DIGITS}${SEP}${JOINED_WORDS}${SEP}${SUFFIX_DIGITS}${SPECIALS}"
+PASSPHRASE="${PREFIX_SPECIALS}${PREFIX_DIGITS}${SEP}${JOINED_WORDS}${SEP}${SUFFIX_DIGITS}${SUFFIX_SPECIALS}"
 
 # ===== OUTPUT =====
 echo "Generated passphrase:"
