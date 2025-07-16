@@ -112,7 +112,8 @@ apply_case_profile() {
                 word="${WORD_ARRAY[i],,}"
                 len=${#word}
                 index=$(( RANDOM % len ))
-                WORD_ARRAY[i]="${word:0:index}${word:index:1^^}${word:index+1}"
+                char="${word:index:1}"
+                WORD_ARRAY[i]="${word:0:index}${char^^}${word:index+1}"
             done
             ;;
         5)
